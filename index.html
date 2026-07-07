@@ -49,7 +49,27 @@
 
      <!-- Add Task -->
      <section class="task-form">
+           <div class="form-group">
+             <input
+             type="text"
+             id="taskInput"
+             placeholder="Enter a new task..."
+             >
 
+             <select id="priority">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+             </select>
+
+             <input type="date" id="dueDate">
+
+             <button id="addTaskBtn">
+                 <i class="fa-solid fa-plus"></i>
+                 Add Task
+             </button>
+         </div>
+     </section>
      </section>
 
      <!-- Filters -->

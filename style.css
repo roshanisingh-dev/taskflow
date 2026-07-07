@@ -76,3 +76,59 @@ body{
     font-family: "Poppins", sans-serif;
     background: transparent;
 }
+
+/* ===== Task Form ===== */
+
+.task-form{
+    margin-bottom: 30px;
+}
+
+.form-group{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+}
+
+.form-group input,
+.form-group select{
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: "Poppins", sans-serif;
+    outline: none;
+}
+
+#taskInput{
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color: #4F46E5;
+}
+
+#addTaskBtn{
+    background: #4F46E5;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+#addTaskBtn:hover{
+    background: #4338CA;
+}
