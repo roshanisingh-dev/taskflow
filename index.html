@@ -28,7 +28,6 @@
              <i class="fa-solid fa-list-check"></i>
              <h1>TaskFlow</h1>
          </div>
-
          <p class="subtitle">
              Stay organized. Stay productive.
          </p>
@@ -49,11 +48,13 @@
 
      <!-- Add Task -->
      <section class="task-form">
-           <div class="form-group">
+        <form id="taskForm" class="form-group">
+             <label for="taskInput" class="sr-only">Task Name</label>
              <input
-             type="text"
-             id="taskInput"
-             placeholder="Enter a new task..."
+                type="text"
+                id="taskInput"
+                maxlength="100"
+                placeholder="Enter a new task..."
              >
 
              <select id="priority">
@@ -64,27 +65,54 @@
 
              <input type="date" id="dueDate">
 
-             <button id="addTaskBtn">
+             <button type="submit" id="addTaskBtn">
                  <i class="fa-solid fa-plus"></i>
                  Add Task
              </button>
-         </div>
+        </form>
      </section>
-     </section>
+
 
      <!-- Filters -->
      <section class="filter-section">
+         <button class="filter-btn active" data-filter="all">
+             All
+          </button>
 
-     </section>
+          <button class="filter-btn" data-filter="pending">
+              Pending
+          </button>
+
+          <button class="filter-btn" data-filter="completed">
+             Completed
+         </button>
+      </section>
 
      <!-- Task List -->
-     <section class="task-list">
-
+     <section class="task-list" id="taskList">
+           <div class="empty-state" id="emptyState">
+                <i class="fa-regular fa-clipboard"></i>
+                <h3>No Tasks Yet</h3>
+                <p>Add your first task to get started.</p>
+         </div>
      </section>
 
      <!-- Statistics -->
      <section class="stats">
+          <div class="stat-card">
+              <h2 id="totalTasks">0</h2>
+              <p>Total Tasks</p>
+          </div>
 
+          <div class="stat-card">
+             <h2 id="completedTasks">0</h2>
+             <p>Completed</p>
+          </div>
+
+           <div class="stat-card">
+              <h2 id="pendingTasks">0</h2>
+              <p>Pending</p>
+          </div>
      </section>
  </main>
 
