@@ -9,7 +9,7 @@ const addTaskBtn = document.getElementById("addTaskBtn");
 
 const searchInput = document.getElementById("searchInput");
 
-const taskList = document.querySelector(".task-list");
+const taskList = document.getElementById("taskList");
 
 const totalTasks = document.getElementById("totalTasks");
 const completedTasks = document.getElementById("completedTasks");
@@ -112,7 +112,7 @@ function renderTasks() {
                <i class="fa-solid fa-pen"></i>
              </button>
 
-             <button class="delete-btn">
+             <button class="delete-btn" data-id="${task.id}">
                <i class="fa-solid fa-trash"></i>
                </button>
          </div>
@@ -120,6 +120,11 @@ function renderTasks() {
 
         taskList.appendChild(taskCard);
 
+        const deleteBtn = taskCard.querySelector(".delete-btn");
+
+        deleteBtn.addEventListener("click", () => {
+            deleteTask(task.id);
+        });
     });
 
 }
@@ -133,4 +138,10 @@ function updateStats() {
     completedTasks.textContent = completed;
 
     pendingTasks.textContent = tasks.length - completed;
+}
+
+function deleteTask(id){
+    tasks = tasks.filter(task => task.id !== id);
+    renderTasks();
+    updateStats();
 }
