@@ -23,6 +23,7 @@ const filterButtons = document.querySelectorAll(".filter-btn");
 
 let tasks = [];
 let currentFilter = "all";
+let editingTaskId = null;
 
 // ================================
 // Event Listeners
@@ -32,12 +33,29 @@ const taskForm = document.getElementById("taskForm");
 
 taskForm.addEventListener("submit", addTask);
 
+searchInput.addEventListener("input", renderTasks);
+
+filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter;
+
+        filterButtons.forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        renderTasks();
+    });
+});
+
 // ================================
 // Functions
 // ================================
 
+
 function addTask(event) {
-    event.preventDefault(); // Prevent form from submitting normally
+    event.preventDefault();
 
     const title = taskInput.value.trim();
 
@@ -46,18 +64,37 @@ function addTask(event) {
         return;
     }
 
-    const task = {
-        id: Date.now(),
-        title: title,
-        priority: priority.value,
-        dueDate: dueDate.value,
-        completed: false
-    };
+    if (editingTaskId !== null) {
+        // Update the existing task
+        tasks = tasks.map(task => {
+            if (task.id === editingTaskId) {
+                return {
+                    ...task,
+                    title: title,
+                    priority: priority.value,
+                    dueDate: dueDate.value
+                };
+            }
 
-    tasks.push(task);
+            return task;
+        });
+
+        editingTaskId = null;
+        addTaskBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Task';
+    } else {
+        // Create a new task
+        const task = {
+            id: Date.now(),
+            title: title,
+            priority: priority.value,
+            dueDate: dueDate.value,
+            completed: false
+        };
+
+        tasks.push(task);
+    }
 
     renderTasks();
-
     updateStats();
 
     taskInput.value = "";
@@ -66,21 +103,48 @@ function addTask(event) {
 }
 
 
-function renderTasks() {
-    taskList.innerHTML = "";
 
-    if (tasks.length === 0) {
+function getFilteredTasks() {
+    let filteredTasks = tasks;
+
+    // Filter by completion status
+    if (currentFilter === "pending") {
+        filteredTasks = filteredTasks.filter(task => !task.completed);
+    } else if (currentFilter === "completed") {
+        filteredTasks = filteredTasks.filter(task => task.completed);
+    }
+
+    // Filter by search text
+    const searchText = searchInput.value.trim().toLowerCase();
+
+    if (searchText !== "") {
+        filteredTasks = filteredTasks.filter(task =>
+            task.title.toLowerCase().includes(searchText)
+        );
+    }
+
+    return filteredTasks;
+}
+
+
+
+function renderTasks() {
+
+    taskList.innerHTML = "";
+    const filteredTasks = getFilteredTasks();
+
+    if (filteredTasks.length === 0) {
         taskList.innerHTML = `
-            <div class="empty-state">
+             <div class="empty-state">
                 <i class="fa-regular fa-clipboard"></i>
-                <h3>No Tasks Yet</h3>
-                <p>Add your first task to get started.</p>
+                <h3>No Matching Tasks</h3>
+                <p>Try another search or filter.</p>
             </div>
         `;
         return;
     }
 
-    tasks.forEach(task => {
+    filteredTasks.forEach(task => {
         const taskCard = document.createElement("div");
         taskCard.classList.add("task-card");
 
@@ -130,6 +194,11 @@ function renderTasks() {
         taskCard.querySelector(".complete-btn").addEventListener("click", () => {
             toggleTask(task.id);
         });
+        
+        taskCard.querySelector(".edit-btn").addEventListener("click", () => {
+             editTask(task.id);
+        });
+
     });
 }
 
@@ -162,4 +231,24 @@ function toggleTask(id){
 
     renderTasks();
     updateStats();
+}
+
+
+function editTask(id) {
+    const task = tasks.find(task => task.id === id);
+
+    if (!task) {
+        return;
+    }
+
+    editingTaskId = task.id;
+
+    taskInput.value = task.title;
+    priority.value = task.priority;
+    dueDate.value = task.dueDate;
+
+    addTaskBtn.innerHTML =
+        '<i class="fa-solid fa-check"></i> Update Task';
+
+    taskInput.focus();
 }
