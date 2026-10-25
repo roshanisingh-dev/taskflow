@@ -259,9 +259,9 @@ body{
     transition:transform 0.2s, box-shadow 0.2s;
 }
 
-.task-card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 18px rgba(0,0,0,0.8);
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
 .task-info{
@@ -335,4 +335,18 @@ body{
 .delete-btn{
     background:#ef4444;
     color:white;
+}
+
+.task-card.completed {
+    opacity: 0.75;
+    border-left-color: #22c55e;
+}
+
+.task-card.completed .task-info h3 {
+    text-decoration: line-through;
+    color: #64748b;
+}
+
+.task-card.completed .complete-btn {
+    background: #15803d;
 }

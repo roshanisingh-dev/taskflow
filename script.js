@@ -65,10 +65,11 @@ function addTask(event) {
     dueDate.value = "";
 }
 
+
 function renderTasks() {
+    taskList.innerHTML = "";
 
     if (tasks.length === 0) {
-
         taskList.innerHTML = `
             <div class="empty-state">
                 <i class="fa-regular fa-clipboard"></i>
@@ -76,58 +77,62 @@ function renderTasks() {
                 <p>Add your first task to get started.</p>
             </div>
         `;
-
         return;
     }
 
-    taskList.innerHTML = "";
-
     tasks.forEach(task => {
-
         const taskCard = document.createElement("div");
-
         taskCard.classList.add("task-card");
 
+        if (task.completed) {
+            taskCard.classList.add("completed");
+        }
+
         taskCard.innerHTML = `
-         <div class="task-info">
-             <h3>${task.title}</h3>
+            <div class="task-info">
+                <h3></h3>
+                <div class="task-meta">
+                    <span class="priority ${task.priority.toLowerCase()}">
+                        ${task.priority}
+                    </span>
+                    <span>
+                        <i class="fa-regular fa-calendar"></i>
+                        ${task.dueDate || "No Due Date"}
+                    </span>
+                </div>
+            </div>
 
-             <div class="task-meta">
-                 <span class="priority ${task.priority.toLowerCase()}">
-                     ${task.priority}
-                 </span>
-
-                 <span>
-                    📅 ${task.dueDate || "No Due Date"}
-                 </span>
-             </div>
-         </div>
-
-         <div class="task-actions">
-             <button class="complete-btn">
-               <i class="fa-solid fa-check"></i>
-             </button>
-
-             <button class="edit-btn">
-               <i class="fa-solid fa-pen"></i>
-             </button>
-
-             <button class="delete-btn" data-id="${task.id}">
-               <i class="fa-solid fa-trash"></i>
-               </button>
-         </div>
+            <div class="task-actions">
+                <button type="button" class="complete-btn"
+                    aria-label="Toggle task completion">
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <button type="button" class="edit-btn"
+                    aria-label="Edit task">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button type="button" class="delete-btn"
+                    aria-label="Delete task">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
         `;
+
+        // Use textContent for the user-provided task title.
+        taskCard.querySelector(".task-info h3").textContent = task.title;
 
         taskList.appendChild(taskCard);
 
-        const deleteBtn = taskCard.querySelector(".delete-btn");
-
-        deleteBtn.addEventListener("click", () => {
+        taskCard.querySelector(".delete-btn").addEventListener("click", () => {
             deleteTask(task.id);
         });
-    });
 
+        taskCard.querySelector(".complete-btn").addEventListener("click", () => {
+            toggleTask(task.id);
+        });
+    });
 }
+
 
 function updateStats() {
 
@@ -142,6 +147,19 @@ function updateStats() {
 
 function deleteTask(id){
     tasks = tasks.filter(task => task.id !== id);
+    renderTasks();
+    updateStats();
+}
+
+function toggleTask(id){
+    tasks = tasks.map(task =>{
+
+        if(task.id === id){
+            task.completed = !task.completed;
+        }
+        return task;
+    });
+
     renderTasks();
     updateStats();
 }
